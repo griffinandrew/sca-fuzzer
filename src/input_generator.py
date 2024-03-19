@@ -196,9 +196,8 @@ class GeneticInputGenerator(InputGeneratorCommon):
                     #only do these mutations occasionally to cut on cost and have diversity of input
                     #perhaps this could be more sophisticated, but for now this is fine
                     if random.randint(0, 1) == 0:
-                        mutate_input = self.mutate(inputs, taints, i) # this will be slow if need to find indexs and shit everytime
-                        new_input[j] = mutate_input[j]
-
+                        mutated_input = self.mutate(inputs, taints, i) # this will be slow if need to find indexs and shit everytime
+                        new_input[j] = mutate_input #i think
 
             new_inputs.append(new_input)
 
@@ -250,7 +249,8 @@ class GeneticInputGenerator(InputGeneratorCommon):
         return random_idx = random.randint(0, len(idx) - 1)
 
 
-    def mutate(self, inputs: List[Input], taints: List[InputTaint], index_of_input: int) -> Input:
+    #def mutate(self, inputs: List[Input], taints: List[InputTaint], index_of_input: int) -> Input:
+    def mutate(self, inputs: List[Input], taints: List[InputTaint], index_of_input: int) -> uint64: #idk about this return
         """
         Mutate operator just modifies tainted inputs `slightly`
         intuition modification of tainted inputs 
@@ -267,9 +267,9 @@ class GeneticInputGenerator(InputGeneratorCommon):
         tainted_input = input[random_idx] # this is uint64
 
         #deal with overflow
-        if (tainted_input +1) == UINT_MAX:
+        if (tainted_input) == UINT_MAX:
             tainted_input -= 1 #decrement
-        elif (tainted_input -1) == UINT_MIN:
+        elif (tainted_input) == UINT_MIN:
             tainted_input += 1
         else:
             #randomly increment or decrement
@@ -278,9 +278,44 @@ class GeneticInputGenerator(InputGeneratorCommon):
             else:
                 tainted_input -= 1
 
-        return input
+        return tainted_input
 
     # perhaps return the mutated input so that can be added to non mutated inputs
+
+
+def mutate_improved(self, inputs: List[Input], taints: List[InputTaint], index_of_input: int) -> Input:
+        """
+        Mutate operator just modifies tainted inputs `slightly`
+        intuition modification of tainted inputs 
+        will result in a seed that could cause more coverage
+        """
+        #note that these params are not used / implemented, but are here for future use
+        idx = self.get_idx_with_taint(inputs, taints, index_of_input)
+
+        random_idx_1 = self.get_random_idx(idx)
+        random_idx_2 = self.get_random_idx(idx)
+
+        #mutate the input
+        input = inputs[index_of_input]
+
+        tainted_input_1 = input[random_idx_1] # this is uint64
+        tainted_input_2 = input[random_idx_2] # this is uint64 so now r u like actually gonna do something with this?
+
+        #idk im not sure how to actually mutate this, but i think this is the right direction
+        # two ints to mutate just seems wrong, ur just gonna get a diff int which could have just been generated randomly
+
+        #idk maybe some bitwise operation, or some other operation that is not just increment or decrement
+        # maybe like xor them or something
+
+        mutated_input = tainted_input_1 ^ tainted_input_2
+        return mutated_input
+
+    # perhaps return the mutated input so that can be added to non mutated inputs
+
+
+
+
+
 
 
 
