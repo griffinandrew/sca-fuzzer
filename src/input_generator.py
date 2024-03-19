@@ -13,7 +13,11 @@ from .interfaces import Input, InputTaint, InputGenerator
 from .config import CONF
 from .util import Logger
 
-POW32 = pow(2, 32)
+POW32 = pow(2, 32) 
+
+#only upper 32 are used for the input 
+UINT_MAX = pow(2, 64) - 1
+UINT_MIN = 0
 
 
 class InputGeneratorCommon(InputGenerator):
@@ -136,3 +140,152 @@ class NumpyRandomInputGenerator(InputGeneratorCommon):
 
         self._state += 1
         return input_
+
+
+
+
+#*******************************************************************************
+# the only file that will need to be modified is extend, to incorpoate genetic mutate, 
+# but i need a partner input in order to mutate sooooooo ?
+
+class GeneticInputGenerator(InputGeneratorCommon):
+    """ Genetic input generation """
+
+    def __init__(self, seed: int):
+        super().__init__(seed)
+        self.LOG = Logger()
+
+    def _generate_one(self) -> Input:
+        raise NotImplementedError("Genetic input generation is not implemented yet.")
+
+    #same as other class, just at init assign seed and random inputs
+    def generate(self, count: int) -> List[Input]:
+        # if it's the first invocation and the seed is zero - use random seed
+        if self._state == 0:
+            self._state = random.randint(0, pow(2, 32) - 1)
+            self.LOG.inform("input_gen", f"Setting input seed to: {self._state}")
+
+        generated_inputs = []
+        for _ in range(count):
+            input_ = self._generate_one()
+            generated_inputs.append(input_)
+        return generated_inputs
+
+    def extend_equivalence_classes(self, inputs: List[Input],
+                                   taints: List[InputTaint]) -> List[Input]:
+        """
+        Produce a new sequence of random inputs, but copy the tainted values from
+        the base sequence
+        """
+        if len(inputs) != len(taints):
+            raise Exception("Error: Cannot extend inputs. "
+                            "The number of taints does not match the number of inputs.")
+        # this function is technically not a generation function,
+        # hence it should not update the global generation seed
+        initial_state = self._state
+
+        # create inputs
+        new_inputs = []
+        for i, input_ in enumerate(inputs):
+            taint = taints[i]
+            new_input = self._generate_one() #init with all 0s tho?
+            for j in range(input_.data_size):
+                if taint[j]:
+                    new_input[j] = input_[j]
+                else:
+                    #only do these mutations occasionally to cut on cost and have diversity of input
+                    #perhaps this could be more sophisticated, but for now this is fine
+                    if random.randint(0, 1) == 0:
+                        mutate_input = self.mutate(inputs, taints, i) # this will be slow if need to find indexs and shit everytime
+                        new_input[j] = mutate_input[j]
+
+
+            new_inputs.append(new_input)
+
+        self._state = initial_state
+        return new_inputs
+
+    def load(self, input_paths: List[str]) -> List[Input]:
+        inputs = []
+        for input_path in input_paths:
+            input_ = Input()
+
+            # check that the file is not corrupted
+            size = os.path.getsize(input_path)
+            if size != len(input_) * 8:
+                self.LOG.error(f"Incorrect size of input `{input_path}` "
+                               f"({size} B, expected {len(input_) * 8} B)")
+
+            input_.load(input_path)
+            inputs.append(input_)
+        return inputs
+
+
+    def get_idx_with_taint(self, inputs: List[Input],
+                        taints: List[InputTaint], idx:int) -> List[int]: #i think ret type is right?
+        """
+        Return an array of indices of inputs that have taints for that input
+        """
+        indexes = []
+
+        input_ = inputs[idx]
+        taint = taints[idx]
+        for j in range(input_.data_size):
+            if taint[j]:
+                indexes.append(j)
+
+        return indexes #these are the location of taints aka these r uints that are working
+        #now with acquired indexes, we can mutate the input, as they r uint possibly
+        # by some increment or decrement, or some other operation
+        # intutuon here is that if some uint is working
+        # modify it slightly and see if it still works
+
+
+    def get_random_idx(self, idx: List[int]) -> int:
+        """
+        Return a random index that is not in the list of indices
+        """
+        
+        #select a random tainted input to modify
+        return random_idx = random.randint(0, len(idx) - 1)
+
+
+    def mutate(self, inputs: List[Input], taints: List[InputTaint], index_of_input: int) -> Input:
+        """
+        Mutate operator just modifies tainted inputs `slightly`
+        intuition modification of tainted inputs 
+        will result in a seed that could cause more coverage
+        """
+        #note that these params are not used / implemented, but are here for future use
+        idx = self.get_idx_with_taint(inputs, taints, index_of_input)
+
+        random_idx = self.get_random_idx(idx)
+
+        #mutate the input
+        input = inputs[index_of_input]
+
+        tainted_input = input[random_idx] # this is uint64
+
+        #deal with overflow
+        if (tainted_input +1) == UINT_MAX:
+            tainted_input -= 1 #decrement
+        elif (tainted_input -1) == UINT_MIN:
+            tainted_input += 1
+        else:
+            #randomly increment or decrement
+            if random.randint(0, 1) == 0:
+                tainted_input += 1
+            else:
+                tainted_input -= 1
+
+        return input
+
+    # perhaps return the mutated input so that can be added to non mutated inputs
+
+
+
+
+
+
+
+
