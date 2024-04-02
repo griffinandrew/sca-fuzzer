@@ -165,7 +165,9 @@ def mutate_improved(self, inputs: List[Input], taints: List[InputTaint], index_o
         """
         #note that these params are not used / implemented, but are here for future use
         idx_list = self.get_idxs_with_taint(inputs, taints, index_of_input)
+    
 
+        #yeah this is not a self func call tho?
         #get 2 random indexes to mutate
         random_idx_1 = self.get_random_idx(idx_list)
         random_idx_2 = self.get_random_idx(idx_list)
@@ -321,7 +323,7 @@ class NumpyRandomInputGenerator(InputGeneratorCommon):
         will result in a seed that could cause more coverage
         """
         #note that these params are not used / implemented, but are here for future use
-        idx_list = self.get_idx_with_taint(inputs, taints, index_of_input)
+        idx_list = self.get_idxs_with_taint(inputs, taints, index_of_input)
 
         #get 2 random indexes to mutate
         random_idx_1 = self.get_random_idx(idx_list)
@@ -346,6 +348,35 @@ class NumpyRandomInputGenerator(InputGeneratorCommon):
         #at some point this will all be 1's tho, so need to like randomly choose btw a couple
 
         return mutated_input
+
+
+    def get_idxs_with_taint(self, inputs: List[Input],
+                        taints: List[InputTaint], idx:int) -> List[int]: #i think ret type is right?
+        """
+        Return an array of indices of inputs that have taints for that input
+        """
+        indexes = []
+
+        input_ = inputs[idx]
+        taint = taints[idx]
+        for j in range(input_.data_size):
+            if taint[j]:
+                indexes.append(j)
+
+        return indexes
+
+    
+    def get_random_idx(self, idx: List[int]) -> int:
+        """
+        Return a random index that is not in the list of indices
+        """
+        
+        #select a random tainted input to modify
+        random_idx = random.randint(0, len(idx) - 1)
+        return random_idx
+
+
+    
 
 
 
