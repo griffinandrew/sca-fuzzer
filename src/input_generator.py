@@ -117,7 +117,8 @@ class InputGeneratorCommon(InputGenerator):
         """
         
         #select a random tainted input to modify
-        return random_idx = random.randint(0, len(idx) - 1)
+        random_idx = random.randint(0, len(idx) - 1)
+        return random_idx
 
 
     #def mutate(self, inputs: List[Input], taints: List[InputTaint], index_of_input: int) -> Input:
