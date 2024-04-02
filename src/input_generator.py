@@ -68,7 +68,7 @@ class InputGeneratorCommon(InputGenerator):
                     #perhaps this could be more sophisticated, but for now this is fine
                     if random.randint(0, 1) == 0:
                         mutated_input = self.mutate_improved(inputs, taints, i) # this will be slow if need to find indexs and shit everytime
-                        new_input[j] = mutate_input #i think
+                        new_input[j] = mutated_input #i think
 
             new_inputs.append(new_input)
 
