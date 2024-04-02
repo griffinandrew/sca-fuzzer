@@ -67,7 +67,7 @@ class InputGeneratorCommon(InputGenerator):
                     #only do these mutations occasionally to cut on cost and have diversity of input
                     #perhaps this could be more sophisticated, but for now this is fine
                     if random.randint(0, 1) == 0:
-                        mutated_input = self.mutate(inputs, taints, i) # this will be slow if need to find indexs and shit everytime
+                        mutated_input = self.mutate_improved(inputs, taints, i) # this will be slow if need to find indexs and shit everytime
                         new_input[j] = mutate_input #i think
 
             new_inputs.append(new_input)
@@ -122,7 +122,7 @@ class InputGeneratorCommon(InputGenerator):
 
 
     #def mutate(self, inputs: List[Input], taints: List[InputTaint], index_of_input: int) -> Input:
-    def mutate(self, inputs: List[Input], taints: List[InputTaint], index_of_input: int) -> uint64: #idk about this return
+    def mutate(self, inputs: List[Input], taints: List[InputTaint], index_of_input: int) -> int: #idk about this return
         """
         Mutate operator just modifies tainted inputs `slightly`
         intuition modification of tainted inputs 
@@ -139,6 +139,8 @@ class InputGeneratorCommon(InputGenerator):
         tainted_input = input[random_idx] # this is uint64
 
         #deal with overflow
+
+        #(this could be very wrong?)
         if (tainted_input) == UINT_MAX:
             tainted_input -= 1 #decrement
         elif (tainted_input) == UINT_MIN:
@@ -179,7 +181,7 @@ def mutate_improved(self, inputs: List[Input], taints: List[InputTaint], index_o
         #idk maybe some bitwise operation, or some other operation that is not just increment or decrement
         # maybe like xor them or something
 
-        mutated_input = tainted_input_1 ^ tainted_input_2
+        mutated_input = tainted_input_1 | tainted_input_2
         return mutated_input
 
     # perhaps return the mutated input so that can be added to non mutated inputs
