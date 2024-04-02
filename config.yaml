@@ -1,0 +1,10 @@
+# config.yaml
+instruction_categories:
+  - BASE-BINARY  # arithmetic instructions
+  - BASE-COND_BR
+max_bb_per_function: 5  # up to 5 branches per test case
+min_bb_per_function: 1
+
+contract_observation_clause: loads+stores+pc  # aka CT
+contract_execution_clause:
+  - no_speculation  # aka SEQ
