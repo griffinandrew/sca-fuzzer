@@ -46,7 +46,7 @@ class InputGeneratorCommon(InputGenerator):
                                    taints: List[InputTaint]) -> List[Input]:
         """
         Produce a new sequence of random inputs, but copy the tainted values from
-        the base sequence
+        the base sequence, randomly mutate the input if it is not tainted from tainted
         """
         if len(inputs) != len(taints):
             raise Exception("Error: Cannot extend inputs. "
@@ -159,7 +159,7 @@ class InputGeneratorCommon(InputGenerator):
     # perhaps return the mutated input so that can be added to non mutated inputs
 
 
-def mutate_improved(self, inputs: List[Input], taints: List[InputTaint], index_of_input: int, tainted_idx_list: List[int]) -> Input:
+    def mutate_improved(self, inputs: List[Input], taints: List[InputTaint], index_of_input: int, tainted_idx_list: List[int]) -> Input:
         """
         Mutate operator just modifies tainted inputs `slightly`
         intuition modification of tainted inputs 
@@ -174,9 +174,18 @@ def mutate_improved(self, inputs: List[Input], taints: List[InputTaint], index_o
         #get 2 random indexes to mutate
 
         if(len(idx_list) == 3):
-            random_idx_1 = idx_list[0] #just statically do this?
-            idx_2 = random.randint(1, 2)
-            random_idx_2 = idx_list[idx_2]
+
+            rd_int = random.randint(0,2) 
+            if rd_int == 0:
+                random_idx_1 = idx_list[0]
+                random_idx_1 = idx_list[1]
+            elif rd_int == 1:
+                random_idx_1 = idx_list[0]
+                random_idx_1 = idx_list[2]
+            else:
+                random_idx_1 = idx_list[1]
+                random_idx_1 = idx_list[2]
+                    
         if (len(idx_list) == 2):
             random_idx_1 = idx_list[0]
             random_idx_2 = idx_list[1]
@@ -346,9 +355,18 @@ class NumpyRandomInputGenerator(InputGeneratorCommon):
         #get 2 random indexes to mutate
 
         if(len(idx_list) == 3):
-            random_idx_1 = idx_list[0] #just statically do this?
-            idx_2 = random.randint(1, 2)
-            random_idx_2 = idx_list[idx_2]
+
+            rd_int = random.randint(0,2) 
+            if rd_int == 0:
+                random_idx_1 = idx_list[0]
+                random_idx_1 = idx_list[1]
+            elif rd_int == 1:
+                random_idx_1 = idx_list[0]
+                random_idx_1 = idx_list[2]
+            else:
+                random_idx_1 = idx_list[1]
+                random_idx_1 = idx_list[2]
+                    
         if (len(idx_list) == 2):
             random_idx_1 = idx_list[0]
             random_idx_2 = idx_list[1]
@@ -377,7 +395,6 @@ class NumpyRandomInputGenerator(InputGeneratorCommon):
         #at some point this will all be 1's tho, so need to like randomly choose btw a couple
 
         return mutated_input
-
 
 
     def get_idxs_with_taint(self, inputs: List[Input], taints: List[InputTaint], idx:int) -> List[int]:
