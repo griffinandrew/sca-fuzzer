@@ -330,7 +330,8 @@ class NumpyRandomInputGenerator(InputGeneratorCommon):
         self._state += 1
         return input_
 
-    def mutate_improved(self, inputs: List[Input], taints: List[InputTaint], index_of_input: int, tainted_idx_list: List[int]) -> Input:
+    
+def mutate_improved(self, inputs: List[Input], taints: List[InputTaint], index_of_input: int, tainted_idx_list: List[int]) -> Input:
         """
         Mutate operator just modifies tainted inputs `slightly`
         intuition modification of tainted inputs 
@@ -348,12 +349,15 @@ class NumpyRandomInputGenerator(InputGeneratorCommon):
             random_idx_1 = idx_list[0] #just statically do this?
             idx_2 = random.randint(1, 2)
             random_idx_2 = idx_list[idx_2]
+        if (len(idx_list) == 2):
+            random_idx_1 = idx_list[0]
+            random_idx_2 = idx_list[1]
         else:
             random_idx_1 = self.get_random_idx(idx_list)
             random_idx_2 = self.get_random_idx(idx_list)
 
         #make sure not the same index
-        for count in range(10):
+        for count in range(7):
             if random_idx_1 == random_idx_2:
                 random_idx_2 = self.get_random_idx(idx_list)
             else:
@@ -373,6 +377,7 @@ class NumpyRandomInputGenerator(InputGeneratorCommon):
         #at some point this will all be 1's tho, so need to like randomly choose btw a couple
 
         return mutated_input
+
 
 
     def get_idxs_with_taint(self, inputs: List[Input],
@@ -401,7 +406,6 @@ class NumpyRandomInputGenerator(InputGeneratorCommon):
         return random_idx
 
 
-    
 
 
 
