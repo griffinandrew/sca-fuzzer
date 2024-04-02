@@ -66,9 +66,9 @@ class InputGeneratorCommon(InputGenerator):
                 else:
                     #only do these mutations occasionally to cut on cost and have diversity of input
                     #perhaps this could be more sophisticated, but for now this is fine
-                    if random.randint(0, 1) == 0:
-                        mutated_input = self.mutate_improved(inputs, taints, i) # this will be slow if need to find indexs and shit everytime
-                        new_input[j] = mutated_input #i think
+                    #if random.randint(0, 1) == 0:
+                    mutated_input = self.mutate_improved(inputs, taints, i) # this will be slow if need to find indexs and shit everytime (it is slow)
+                    new_input[j] = mutated_input #i think
 
             new_inputs.append(new_input)
 
@@ -185,6 +185,7 @@ def mutate_improved(self, inputs: List[Input], taints: List[InputTaint], index_o
         tainted_input_2 = input[random_idx_2] # this is uint64 so now r u like actually gonna do something with this?
 
         #use that intution from observations that similar activated bits trigger similar bugs
+
 
         mutated_input = tainted_input_1 | tainted_input_2
 
