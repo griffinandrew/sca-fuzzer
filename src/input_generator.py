@@ -313,6 +313,8 @@ class NumpyRandomInputGenerator(InputGeneratorCommon):
 # the only file that will need to be modified is extend, to incorpoate genetic mutate, 
 # but i need a partner input in order to mutate sooooooo ?
 
+
+'''
 class GeneticInputGenerator(InputGeneratorCommon):
     """ Genetic input generation """
 
@@ -477,12 +479,7 @@ def mutate_improved(self, inputs: List[Input], taints: List[InputTaint], index_o
 
     # perhaps return the mutated input so that can be added to non mutated inputs
 
-
-
-
-
-
-
+'''
 
 
 
