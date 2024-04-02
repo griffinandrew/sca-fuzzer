@@ -308,6 +308,33 @@ class NumpyRandomInputGenerator(InputGeneratorCommon):
         self._state += 1
         return input_
 
+    def mutate_improved(self, inputs: List[Input], taints: List[InputTaint], index_of_input: int) -> Input:
+        """
+        Mutate operator just modifies tainted inputs `slightly`
+        intuition modification of tainted inputs 
+        will result in a seed that could cause more coverage
+        """
+        #note that these params are not used / implemented, but are here for future use
+        idx = self.get_idx_with_taint(inputs, taints, index_of_input)
+
+        random_idx_1 = self.get_random_idx(idx)
+        random_idx_2 = self.get_random_idx(idx)
+
+        #mutate the input
+        input = inputs[index_of_input]
+
+        tainted_input_1 = input[random_idx_1] # this is uint64
+        tainted_input_2 = input[random_idx_2] # this is uint64 so now r u like actually gonna do something with this?
+
+        #idk im not sure how to actually mutate this, but i think this is the right direction
+        # two ints to mutate just seems wrong, ur just gonna get a diff int which could have just been generated randomly
+
+        #idk maybe some bitwise operation, or some other operation that is not just increment or decrement
+        # maybe like xor them or something
+
+        mutated_input = tainted_input_1 | tainted_input_2
+        return mutated_input
+
 
 
 
@@ -415,7 +442,8 @@ class GeneticInputGenerator(InputGeneratorCommon):
         """
         
         #select a random tainted input to modify
-        return random_idx = random.randint(0, len(idx) - 1)
+        random_idx = random.randint(0, len(idx) - 1)
+        return random_idx
 
 
     #def mutate(self, inputs: List[Input], taints: List[InputTaint], index_of_input: int) -> Input:
