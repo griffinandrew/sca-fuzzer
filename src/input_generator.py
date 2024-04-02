@@ -91,7 +91,7 @@ class InputGeneratorCommon(InputGenerator):
         return inputs
 
 
-    def get_idx_with_taint(self, inputs: List[Input],
+    def get_idxs_with_taint(self, inputs: List[Input],
                         taints: List[InputTaint], idx:int) -> List[int]: #i think ret type is right?
         """
         Return an array of indices of inputs that have taints for that input
@@ -164,24 +164,30 @@ def mutate_improved(self, inputs: List[Input], taints: List[InputTaint], index_o
         will result in a seed that could cause more coverage
         """
         #note that these params are not used / implemented, but are here for future use
-        idx = self.get_idx_with_taint(inputs, taints, index_of_input)
+        idx_list = self.get_idx_with_taint(inputs, taints, index_of_input)
 
-        random_idx_1 = self.get_random_idx(idx)
-        random_idx_2 = self.get_random_idx(idx)
+        #get 2 random indexes to mutate
+        random_idx_1 = self.get_random_idx(idx_list)
+        random_idx_2 = self.get_random_idx(idx_list)
 
-        #mutate the input
-        input = inputs[index_of_input]
+        #make sure not the same index
+        while (random_idx_1 == random_idx_2):
+            random_idx_2 = self.get_random_idx(idx_list)
 
+
+        #get the input from array
+        input = inputs[index_of_input] 
+        
+        #get the two tainted inputs
         tainted_input_1 = input[random_idx_1] # this is uint64
         tainted_input_2 = input[random_idx_2] # this is uint64 so now r u like actually gonna do something with this?
 
-        #idk im not sure how to actually mutate this, but i think this is the right direction
-        # two ints to mutate just seems wrong, ur just gonna get a diff int which could have just been generated randomly
-
-        #idk maybe some bitwise operation, or some other operation that is not just increment or decrement
-        # maybe like xor them or something
+        #use that intution from observations that similar activated bits trigger similar bugs
 
         mutated_input = tainted_input_1 | tainted_input_2
+
+        #at some point this will all be 1's tho, so need to like randomly choose btw a couple
+
         return mutated_input
 
     # perhaps return the mutated input so that can be added to non mutated inputs
@@ -308,33 +314,38 @@ class NumpyRandomInputGenerator(InputGeneratorCommon):
         self._state += 1
         return input_
 
-    def mutate_improved(self, inputs: List[Input], taints: List[InputTaint], index_of_input: int) -> Input:
+   def mutate_improved(self, inputs: List[Input], taints: List[InputTaint], index_of_input: int) -> Input:
         """
         Mutate operator just modifies tainted inputs `slightly`
         intuition modification of tainted inputs 
         will result in a seed that could cause more coverage
         """
         #note that these params are not used / implemented, but are here for future use
-        idx = self.get_idx_with_taint(inputs, taints, index_of_input)
+        idx_list = self.get_idx_with_taint(inputs, taints, index_of_input)
 
-        random_idx_1 = self.get_random_idx(idx)
-        random_idx_2 = self.get_random_idx(idx)
+        #get 2 random indexes to mutate
+        random_idx_1 = self.get_random_idx(idx_list)
+        random_idx_2 = self.get_random_idx(idx_list)
 
-        #mutate the input
-        input = inputs[index_of_input]
+        #make sure not the same index
+        while (random_idx_1 == random_idx_2):
+            random_idx_2 = self.get_random_idx(idx_list)
 
+
+        #get the input from array
+        input = inputs[index_of_input] 
+        
+        #get the two tainted inputs
         tainted_input_1 = input[random_idx_1] # this is uint64
         tainted_input_2 = input[random_idx_2] # this is uint64 so now r u like actually gonna do something with this?
 
-        #idk im not sure how to actually mutate this, but i think this is the right direction
-        # two ints to mutate just seems wrong, ur just gonna get a diff int which could have just been generated randomly
-
-        #idk maybe some bitwise operation, or some other operation that is not just increment or decrement
-        # maybe like xor them or something
+        #use that intution from observations that similar activated bits trigger similar bugs
 
         mutated_input = tainted_input_1 | tainted_input_2
-        return mutated_input
 
+        #at some point this will all be 1's tho, so need to like randomly choose btw a couple
+
+        return mutated_input
 
 
 
@@ -416,7 +427,7 @@ class GeneticInputGenerator(InputGeneratorCommon):
         return inputs
 
 
-    def get_idx_with_taint(self, inputs: List[Input],
+    def get_idxs_with_taint(self, inputs: List[Input],
                         taints: List[InputTaint], idx:int) -> List[int]: #i think ret type is right?
         """
         Return an array of indices of inputs that have taints for that input
