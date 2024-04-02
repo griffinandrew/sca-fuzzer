@@ -1,6 +1,6 @@
 #!/bin/bash
 
-COMMAND="rvzr fuzz -s base.json -n 100 -i 10  -c config.yaml -w ./violations"
+COMMAND="rvzr fuzz -s base.json -n 1000 -i 25  -c config.yaml -w ./violations"
 
 FILE="output_all_mutate.txt"
 
