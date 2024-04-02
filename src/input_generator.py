@@ -67,7 +67,7 @@ class InputGeneratorCommon(InputGenerator):
                     #only do these mutations occasionally to cut on cost and have diversity of input
                     #perhaps this could be more sophisticated, but for now this is fine
                     if random.randint(0, 2) == 0:
-                        t_inputs = get_idxs_with_taint(inputs, taints, i)
+                        t_inputs = self.get_idxs_with_taint(inputs, taints, i)
                         if (len(t_inputs) >= 2): 
                             mutated_input = self.mutate_improved(inputs, taints, i, tainted_idx_list) # this will be slow if need to find indexs and shit everytime (it is slow)
                             new_input[j] = mutated_input #i think
