@@ -68,7 +68,7 @@ class InputGeneratorCommon(InputGenerator):
                     #perhaps this could be more sophisticated, but for now this is fine
                     if random.randint(0, 2) == 0:
                         t_inputs = self.get_idxs_with_taint(inputs, taints, i)
-                        if (len(t_inputs) >= 2): 
+                        if (len(t_inputs) > 2): 
                             mutated_input = self.mutate_improved(inputs, taints, i, t_inputs) # this will be slow if need to find indexs and shit everytime (it is slow)
                             new_input[j] = mutated_input #i think
 
@@ -173,16 +173,20 @@ def mutate_improved(self, inputs: List[Input], taints: List[InputTaint], index_o
         #yeah this is not a self func call tho?
         #get 2 random indexes to mutate
 
-        if(len(idx_list) == 2):
-            random_idx_1 = idx_list[0]
-            random_idx_2 = idx_list[1]
+        if(len(idx_list) == 3):
+            random_idx_1 = idx_list[0] #just statically do this?
+            idx_2 = random.randint(1, 2)
+            random_idx_2 = idx_list[idx_2]
         else:
             random_idx_1 = self.get_random_idx(idx_list)
             random_idx_2 = self.get_random_idx(idx_list)
 
         #make sure not the same index
-        while (random_idx_1 == random_idx_2):
-            random_idx_2 = self.get_random_idx(idx_list)
+        for count in range(10):
+            if random_idx_1 == random_idx_2:
+                random_idx_2 = self.get_random_idx(idx_list)
+            else:
+                break
 
 
         #get the input from array
@@ -329,7 +333,7 @@ class NumpyRandomInputGenerator(InputGeneratorCommon):
         intuition modification of tainted inputs 
         will result in a seed that could cause more coverage
         """
-    
+        #note that these params are not used / implemented, but are here for future use
         #idx_list = self.get_idxs_with_taint(inputs, taints, index_of_input)
         idx_list = tainted_idx_list
     
@@ -337,23 +341,21 @@ class NumpyRandomInputGenerator(InputGeneratorCommon):
         #yeah this is not a self func call tho?
         #get 2 random indexes to mutate
 
-        if(len(idx_list) == 2):
-            random_idx_1 = idx_list[0]
-            random_idx_2 = idx_list[1]
+        if(len(idx_list) == 3):
+            random_idx_1 = idx_list[0] #just statically do this?
+            idx_2 = random.randint(1, 2)
+            random_idx_2 = idx_list[idx_2]
         else:
             random_idx_1 = self.get_random_idx(idx_list)
             random_idx_2 = self.get_random_idx(idx_list)
 
         #make sure not the same index
-
         for count in range(10):
             if random_idx_1 == random_idx_2:
                 random_idx_2 = self.get_random_idx(idx_list)
             else:
                 break
 
-        #while (random_idx_1 == random_idx_2):
-        #    random_idx_2 = self.get_random_idx(idx_list)
 
         #get the input from array
         input = inputs[index_of_input] 
@@ -365,11 +367,9 @@ class NumpyRandomInputGenerator(InputGeneratorCommon):
         #use that intution from observations that similar activated bits trigger similar bugs
         mutated_input = tainted_input_1 | tainted_input_2
 
-        #at some point this will near all 1's tho?, so need to like randomly choose btw a couple
+        #at some point this will all be 1's tho, so need to like randomly choose btw a couple
 
         return mutated_input
-
-    # perhaps return the mutated input so that can be added to non mutated inputs
 
 
     def get_idxs_with_taint(self, inputs: List[Input],
