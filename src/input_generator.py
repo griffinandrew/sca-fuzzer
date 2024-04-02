@@ -164,7 +164,7 @@ def mutate_improved(self, inputs: List[Input], taints: List[InputTaint], index_o
         will result in a seed that could cause more coverage
         """
         #note that these params are not used / implemented, but are here for future use
-        idx_list = self.get_idx_with_taint(inputs, taints, index_of_input)
+        idx_list = self.get_idxs_with_taint(inputs, taints, index_of_input)
 
         #get 2 random indexes to mutate
         random_idx_1 = self.get_random_idx(idx_list)
