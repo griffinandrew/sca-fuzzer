@@ -2,8 +2,7 @@
 
 COMMAND="rvzr fuzz -s base.json -n 100 -i 10  -c config.yaml -w ./violations"
 
-FILE="output.txt"
-
+FILE="output_all_mutate.txt"
 
 for ((i=1; i<=15; i++)); do
     echo "************************"
