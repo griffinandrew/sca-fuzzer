@@ -380,8 +380,7 @@ def mutate_improved(self, inputs: List[Input], taints: List[InputTaint], index_o
 
 
 
-    def get_idxs_with_taint(self, inputs: List[Input],
-                        taints: List[InputTaint], idx:int) -> List[int]: #i think ret type is right?
+    def get_idxs_with_taint(self, inputs: List[Input], taints: List[InputTaint], idx:int) -> List[int]: #i think ret type is right?
         """
         Return an array of indices of inputs that have taints for that input
         """
