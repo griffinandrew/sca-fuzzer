@@ -2,7 +2,7 @@
 
 COMMAND="rvzr fuzz -s base.json -n 300 -i 25 -c config.yaml -w ./violations"
 
-FILE="real_dumb25_or.txt"
+FILE="real_base_no_taint.txt"
 
 for ((i=1; i<=30; i++)); do
     echo "************************"

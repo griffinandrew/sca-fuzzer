@@ -60,9 +60,9 @@ class InputGeneratorCommon(InputGenerator):
         for i, input_ in enumerate(inputs):
             taint = taints[i]
             new_input = self._generate_one() 
-            for j in range(input_.data_size):
-                if taint[j]:
-                    new_input[j] = input_[j]
+            #for j in range(input_.data_size):
+                #if taint[j]:
+                #    new_input[j] = input_[j]
                 #else:
                     #only do these mutations occasionally to cut on cost and have diversity of input
                     #perhaps this could be more sophisticated, but for now this is fine
@@ -70,9 +70,9 @@ class InputGeneratorCommon(InputGenerator):
                     #t_inputs = self.get_idxs_with_taint(inputs, taints, i)
                     #if (len(t_inputs) >= 2): 
                             #mutated_input = self.mutate_improved(inputs, taints, i, t_inputs)
-                elif random.randint(0, 3) == 0:
-                    mutated_input = self.mutate_dumb(inputs, i)
-                    new_input[j] = mutated_input
+                #elif random.randint(0, 3) == 0:
+                #    mutated_input = self.mutate_dumb(inputs, i)
+                #    new_input[j] = mutated_input
 
             new_inputs.append(new_input)
 
