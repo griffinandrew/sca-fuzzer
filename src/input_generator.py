@@ -216,7 +216,7 @@ class InputGeneratorCommon(InputGenerator):
         return mutated_input
 
     
-    def mutate_dumb(self, inputs: List[Input], taints: List[InputTaint], index_of_input: int, tainted_idx_list: List[int]) -> Input:
+    def mutate_dumb(self, inputs: List[Input], index_of_input: int) -> Input:
         """
         this just mutates 2 random inputs and doesnt account for taint
         """
@@ -234,12 +234,18 @@ class InputGeneratorCommon(InputGenerator):
 
         #use that intution from observations that similar activated bits trigger similar bugs
         
+        mutated_input = tainted_input_1 | tainted_input_2
+
+        '''
         if random.randint(0,1) == 0:
             mutated_input = tainted_input_1 | tainted_input_2
         else:
             mutated_input = tainted_input_1 & tainted_input_2
+        '''
 
         return mutated_input
+
+
 
 class LegacyRandomInputGenerator(InputGeneratorCommon):
     """
