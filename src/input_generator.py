@@ -238,14 +238,14 @@ class InputGeneratorCommon(InputGenerator):
 
         #use that intution from observations that similar activated bits trigger similar bugs
         
-        mutated_input = tainted_input_1 | tainted_input_2
+        #mutated_input = tainted_input_1 | tainted_input_2
 
-        '''
+        
         if random.randint(0,1) == 0:
             mutated_input = tainted_input_1 | tainted_input_2
         else:
             mutated_input = tainted_input_1 & tainted_input_2
-        '''
+        
         
 
         return mutated_input
@@ -409,14 +409,14 @@ class NumpyRandomInputGenerator(InputGeneratorCommon):
 
         #use that intution from observations that similar activated bits trigger similar bugs
         
-        mutated_input = tainted_input_1 | tainted_input_2
+        #mutated_input = tainted_input_1 | tainted_input_2
 
-        '''
+        
         if random.randint(0,1) == 0:
             mutated_input = tainted_input_1 | tainted_input_2
         else:
             mutated_input = tainted_input_1 & tainted_input_2
-        '''
+        
 
         return mutated_input
 
