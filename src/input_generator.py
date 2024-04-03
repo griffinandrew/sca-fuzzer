@@ -143,7 +143,7 @@ class InputGeneratorCommon(InputGenerator):
 
         tainted_input = input_[random_idx] # this is uint64
 
-        index_to_flip = random.randint(0, (len(tainted_input) - 1)
+        index_to_flip = random.randint(0, (len(tainted_input) - 1))
 
         #flip the bit
         mutated_input_ = tainted_input | (1 << index_to_flip)
@@ -428,7 +428,7 @@ class NumpyRandomInputGenerator(InputGeneratorCommon):
 
         tainted_input = input_[random_idx] # this is uint64
 
-        index_to_flip = random.randint(0, (len(tainted_input) - 1)
+        index_to_flip = random.randint(0, (len(tainted_input) - 1))
 
         #flip the bit
         mutated_input_ = tainted_input | (1 << index_to_flip)
