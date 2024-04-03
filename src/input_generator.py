@@ -134,7 +134,7 @@ class InputGeneratorCommon(InputGenerator):
         intuition modification of tainted inputs 
         will result in a seed that could cause more coverage
         """
-            random_idx = self.get_random_idx(tainted_idx_list)
+        random_idx = self.get_random_idx(tainted_idx_list)
 
         input_ = inputs[index_of_input]
 
