@@ -69,10 +69,10 @@ class InputGeneratorCommon(InputGenerator):
                     #perhaps this could be more sophisticated, but for now this is fine
                     #if random.randint(0, 1) == 0:
                     #t_inputs = self.get_idxs_with_taint(inputs, taints, i)
-                    if (len(t_inputs) >= 2) and random.randint(0, 9) == 0: 
-                        mutated_input = self.mutate_improved(inputs, taints, i, t_inputs)
-                        #mutated_input = self.mutate(inputs, taints, i, t_inputs)
-                        new_input[j] = mutated_input
+                    #if (len(t_inputs) >= 2) and random.randint(0, 9) == 0: 
+                        #mutated_input = self.mutate_improved(inputs, taints, i, t_inputs)
+                    mutated_input = self.mutate(inputs, taints, i, t_inputs)
+                    new_input[j] = mutated_input
                 #elif random.randint(0, 3) == 0:
                 #    mutated_input = self.mutate_dumb(inputs, i)
                 #    new_input[j] = mutated_input
