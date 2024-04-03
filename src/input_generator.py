@@ -223,13 +223,13 @@ class InputGeneratorCommon(InputGenerator):
         #get the input from array
         input_ = inputs[index_of_input] 
 
-        rd_int = random.randint(0,(len(input_) - 1))
-        random_idx_1 = tainted_idx_list[rd_int]
+        random_idx_1 = random.randint(0,(len(input_) - 1))
         random_idx_2 = random.randint(0,(len(input_) - 1))
         
         #get the two tainted inputs
-        tainted_input_1 = input[random_idx_1] # this is uint64
-        tainted_input_2 = input[random_idx_2] # this is uint64 so now r u like actually gonna do something with this?
+        #64 bit ints randomly selected, not based on taint
+        tainted_input_1 = input_[random_idx_1] 
+        tainted_input_2 = input_[random_idx_2] 
 
         #use that intution from observations that similar activated bits trigger similar bugs
         
@@ -387,13 +387,13 @@ class NumpyRandomInputGenerator(InputGeneratorCommon):
         #get the input from array
         input_ = inputs[index_of_input] 
 
-        rd_int = random.randint(0,(len(input_) - 1))
-        random_idx_1 = tainted_idx_list[rd_int]
+        random_idx_1 = random.randint(0,(len(input_) - 1))
         random_idx_2 = random.randint(0,(len(input_) - 1))
         
         #get the two tainted inputs
-        tainted_input_1 = input[random_idx_1] # this is uint64
-        tainted_input_2 = input[random_idx_2] # this is uint64 so now r u like actually gonna do something with this?
+        #64 bit ints randomly selected, not based on taint
+        tainted_input_1 = input_[random_idx_1] 
+        tainted_input_2 = input_[random_idx_2] 
 
         #use that intution from observations that similar activated bits trigger similar bugs
         
