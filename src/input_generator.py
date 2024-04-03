@@ -69,7 +69,8 @@ class InputGeneratorCommon(InputGenerator):
                     if random.randint(0, 1) == 0:
                         t_inputs = self.get_idxs_with_taint(inputs, taints, i)
                         if (len(t_inputs) >= 2): 
-                            mutated_input = self.mutate_improved(inputs, taints, i, t_inputs) # this will be slow if need to find indexs and shit everytime (it is slow)
+                            #mutated_input = self.mutate_improved(inputs, taints, i, t_inputs)
+                            mutated_input = self.mutate_dumb(inputs, taints, i, t_inputs)
                             new_input[j] = mutated_input #i think
 
             new_inputs.append(new_input)
@@ -202,90 +203,42 @@ class InputGeneratorCommon(InputGenerator):
 
 
         #get the input from array
-        input = inputs[index_of_input] 
+        input_ = inputs[index_of_input] 
+        
+        #get the two tainted inputs
+        tainted_input_1 = input_[random_idx_1] # this is uint64
+        tainted_input_2 = input_[random_idx_2] # this is uint64 so now r u like actually gonna do something with this?
+
+        #use that intution from observations that similar activated bits trigger similar bugs
+        mutated_input = tainted_input_1 | tainted_input_2
+
+        return mutated_input
+
+    
+    def mutate_dumb(self, inputs: List[Input], taints: List[InputTaint], index_of_input: int, tainted_idx_list: List[int]) -> Input:
+        """
+        this just mutates 2 random inputs and doesnt account for taint
+        """
+
+        #get the input from array
+        input_ = inputs[index_of_input] 
+
+        rd_int = random.randint(0,(len(input_) - 1))
+        random_idx_1 = tainted_idx_list[rd_int]
+        random_idx_2 = random.randint(0,(len(input_) - 1))
         
         #get the two tainted inputs
         tainted_input_1 = input[random_idx_1] # this is uint64
         tainted_input_2 = input[random_idx_2] # this is uint64 so now r u like actually gonna do something with this?
 
         #use that intution from observations that similar activated bits trigger similar bugs
-        mutated_input = tainted_input_1 | tainted_input_2
-
-        #at some point this will all be 1's tho, so need to like randomly choose btw a couple
-
-
-
-        # I like extending this to randomly choose between a couple of operations i think oring makes sense
-        # but &ing could also be useful
+        
+        if random.randint(0,(len(input_) - 1)) == 0:
+            mutated_input = tainted_input_1 | tainted_input_2
+        else:
+            mutated_input = tainted_input_1 & tainted_input_2
 
         return mutated_input
-
-    # perhaps return the mutated input so that can be added to non mutated inputs
-
-
-'''
-    def __init__(self, seed: int):
-        super().__init__(seed)
-        self.LOG = Logger()
-
-    @abstractmethod
-    def _generate_one(self) -> Input:
-        pass
-
-    def generate(self, count: int) -> List[Input]:
-        # if it's the first invocation and the seed is zero - use random seed
-        if self._state == 0:
-            self._state = random.randint(0, pow(2, 32) - 1)
-            self.LOG.inform("input_gen", f"Setting input seed to: {self._state}")
-
-        generated_inputs = []
-        for _ in range(count):
-            input_ = self._generate_one()
-            generated_inputs.append(input_)
-        return generated_inputs
-
-    def extend_equivalence_classes(self, inputs: List[Input],
-                                   taints: List[InputTaint]) -> List[Input]:
-        """
-        Produce a new sequence of random inputs, but copy the tainted values from
-        the base sequence
-        """
-        if len(inputs) != len(taints):
-            raise Exception("Error: Cannot extend inputs. "
-                            "The number of taints does not match the number of inputs.")
-        # this function is technically not a generation function,
-        # hence it should not update the global generation seed
-        initial_state = self._state
-
-        # create inputs
-        new_inputs = []
-        for i, input_ in enumerate(inputs):
-            taint = taints[i]
-            new_input = self._generate_one()
-            for j in range(input_.data_size):
-                if taint[j]:
-                    new_input[j] = input_[j]
-            new_inputs.append(new_input)
-
-        self._state = initial_state
-        return new_inputs
-
-    def load(self, input_paths: List[str]) -> List[Input]:
-        inputs = []
-        for input_path in input_paths:
-            input_ = Input()
-
-            # check that the file is not corrupted
-            size = os.path.getsize(input_path)
-            if size != len(input_) * 8:
-                self.LOG.error(f"Incorrect size of input `{input_path}` "
-                               f"({size} B, expected {len(input_) * 8} B)")
-
-            input_.load(input_path)
-            inputs.append(input_)
-        return inputs
-
-'''
 
 class LegacyRandomInputGenerator(InputGeneratorCommon):
     """
@@ -425,6 +378,31 @@ class NumpyRandomInputGenerator(InputGeneratorCommon):
         #select a random tainted input to modify
         random_idx = random.randint(0, len(idx) - 1)
         return random_idx
+
+    def mutate_dumb(self, inputs: List[Input], taints: List[InputTaint], index_of_input: int, tainted_idx_list: List[int]) -> Input:
+        """
+        this just mutates 2 random inputs and doesnt account for taint
+        """
+
+        #get the input from array
+        input_ = inputs[index_of_input] 
+
+        rd_int = random.randint(0,(len(input_) - 1))
+        random_idx_1 = tainted_idx_list[rd_int]
+        random_idx_2 = random.randint(0,(len(input_) - 1))
+        
+        #get the two tainted inputs
+        tainted_input_1 = input[random_idx_1] # this is uint64
+        tainted_input_2 = input[random_idx_2] # this is uint64 so now r u like actually gonna do something with this?
+
+        #use that intution from observations that similar activated bits trigger similar bugs
+        
+        if random.randint(0,(len(input_) - 1)) == 0:
+            mutated_input = tainted_input_1 | tainted_input_2
+        else:
+            mutated_input = tainted_input_1 & tainted_input_2
+
+        return mutated_input
 
 
 
