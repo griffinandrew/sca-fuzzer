@@ -2,7 +2,7 @@
 
 COMMAND="rvzr fuzz -s base.json -n 300 -i 25 -c config.yaml -w ./violations"
 
-FILE="100%_fast_improved mutate.txt"
+FILE="50%_no_taint.txt"
 
 for ((i=1; i<=15; i++)); do
     echo "************************"
