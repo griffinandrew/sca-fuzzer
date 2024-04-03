@@ -2,7 +2,7 @@
 
 COMMAND="rvzr fuzz -s base.json -n 300 -i 25 -c config.yaml -w ./violations"
 
-FILE="output_dumb_and_or-10.txt"
+FILE="output_baseline_2.txt"
 
 for ((i=1; i<=30; i++)); do
     echo "************************"
