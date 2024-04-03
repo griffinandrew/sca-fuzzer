@@ -1,10 +1,10 @@
 #!/bin/bash
 
-COMMAND="rvzr fuzz -s base.json -n 500 -i 25 -c config.yaml -w ./violations"
+COMMAND="rvzr fuzz -s base.json -n 300 -i 25 -c config.yaml -w ./violations"
 
 FILE="output_dumb_50_inputs.txt"
 
-for ((i=1; i<=15; i++)); do
+for ((i=1; i<=30; i++)); do
     echo "************************"
     echo "running iter $i..."
     echo "************************" >> "$FILE"
