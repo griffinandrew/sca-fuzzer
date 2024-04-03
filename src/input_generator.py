@@ -70,7 +70,7 @@ class InputGeneratorCommon(InputGenerator):
                     #t_inputs = self.get_idxs_with_taint(inputs, taints, i)
                     #if (len(t_inputs) >= 2): 
                             #mutated_input = self.mutate_improved(inputs, taints, i, t_inputs)
-                #if j%2 == 0:
+                if j%2 == 0:
                     mutated_input = self.mutate_dumb(inputs, i)
                     new_input[j] = mutated_input #i think
 
@@ -398,10 +398,14 @@ class NumpyRandomInputGenerator(InputGeneratorCommon):
 
         #use that intution from observations that similar activated bits trigger similar bugs
         
+        mutated_input = tainted_input_1 | tainted_input_2
+
+        '''
         if random.randint(0,1) == 0:
             mutated_input = tainted_input_1 | tainted_input_2
         else:
             mutated_input = tainted_input_1 & tainted_input_2
+        '''
 
         return mutated_input
 
