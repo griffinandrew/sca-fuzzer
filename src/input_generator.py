@@ -69,8 +69,8 @@ class InputGeneratorCommon(InputGenerator):
                     if random.randint(0, 9) == 0:
                         t_inputs = self.get_idxs_with_taint(inputs, taints, i)
                         if (len(t_inputs) >= 2): 
-                        mutated_input = self.mutate_improved(inputs, taints, i, t_inputs) # this will be slow if need to find indexs and shit everytime (it is slow)
-                        new_input[j] = mutated_input #i think
+                            mutated_input = self.mutate_improved(inputs, taints, i, t_inputs) # this will be slow if need to find indexs and shit everytime (it is slow)
+                            new_input[j] = mutated_input #i think
 
             new_inputs.append(new_input)
 
