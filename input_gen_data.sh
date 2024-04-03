@@ -1,8 +1,8 @@
 #!/bin/bash
 
-COMMAND="rvzr fuzz -s base.json -n 1000 -i 50 -c config.yaml -w ./violations"
+COMMAND="rvzr fuzz -s base.json -n 1000 -i 25 -c config.yaml -w ./violations"
 
-FILE="output_50_mutate_100_inputs.txt"
+FILE="output_dumb_50_inputs.txt"
 
 for ((i=1; i<=15; i++)); do
     echo "************************"
