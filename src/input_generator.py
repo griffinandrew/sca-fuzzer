@@ -71,7 +71,7 @@ class InputGeneratorCommon(InputGenerator):
                     #if (len(t_inputs) >= 2): 
                             #mutated_input = self.mutate_improved(inputs, taints, i, t_inputs)
                 #if j%2 == 0:
-                    mutated_input = self.mutate_dumb(inputs, taints, i, t_inputs)
+                    mutated_input = self.mutate_dumb(inputs, i)
                     new_input[j] = mutated_input #i think
 
             new_inputs.append(new_input)
@@ -380,7 +380,7 @@ class NumpyRandomInputGenerator(InputGeneratorCommon):
         random_idx = random.randint(0, len(idx) - 1)
         return random_idx
 
-    def mutate_dumb(self, inputs: List[Input], taints: List[InputTaint], index_of_input: int, tainted_idx_list: List[int]) -> Input:
+    def mutate_dumb(self, inputs: List[Input], index_of_input: int) -> Input:
         """
         this just mutates 2 random inputs and doesnt account for taint
         """
