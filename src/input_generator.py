@@ -303,7 +303,7 @@ class NumpyRandomInputGenerator(InputGeneratorCommon):
         return input_
 
     
-        def mutate_improved(self, inputs: List[Input], taints: List[InputTaint], index_of_input: int, tainted_idx_list: List[int]) -> Input:
+    def mutate_improved(self, inputs: List[Input], taints: List[InputTaint], index_of_input: int, tainted_idx_list: List[int]) -> Input:
         """
         Mutate operator just modifies tainted inputs `slightly`
         intuition modification of tainted inputs 
