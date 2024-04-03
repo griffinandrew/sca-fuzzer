@@ -2,9 +2,9 @@
 
 COMMAND="rvzr fuzz -s base.json -n 300 -i 25 -c config.yaml -w ./violations"
 
-FILE="real_base_no_taint.txt"
+FILE="100%_fast_improved mutate.txt"
 
-for ((i=1; i<=30; i++)); do
+for ((i=1; i<=15; i++)); do
     echo "************************"
     echo "running iter $i..."
     echo "************************" >> "$FILE"

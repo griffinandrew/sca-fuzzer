@@ -60,16 +60,19 @@ class InputGeneratorCommon(InputGenerator):
         for i, input_ in enumerate(inputs):
             taint = taints[i]
             new_input = self._generate_one() 
-            #for j in range(input_.data_size):
-                #if taint[j]:
-                #    new_input[j] = input_[j]
-                #else:
+            t_inputs = self.get_idxs_with_taint(inputs, taints, i)
+            for j in range(input_.data_size):
+                if taint[j]:
+                    new_input[j] = input_[j]
+                else:
                     #only do these mutations occasionally to cut on cost and have diversity of input
                     #perhaps this could be more sophisticated, but for now this is fine
                     #if random.randint(0, 1) == 0:
                     #t_inputs = self.get_idxs_with_taint(inputs, taints, i)
-                    #if (len(t_inputs) >= 2): 
-                            #mutated_input = self.mutate_improved(inputs, taints, i, t_inputs)
+                    if (len(t_inputs) >= 2): 
+                        mutated_input = self.mutate_improved(inputs, taints, i, t_inputs)
+                        #mutated_input = self.mutate(inputs, taints, i, t_inputs)
+                        new_input[j] = mutated_input
                 #elif random.randint(0, 3) == 0:
                 #    mutated_input = self.mutate_dumb(inputs, i)
                 #    new_input[j] = mutated_input
@@ -125,40 +128,29 @@ class InputGeneratorCommon(InputGenerator):
         return random_idx
 
 
-    #def mutate(self, inputs: List[Input], taints: List[InputTaint], index_of_input: int) -> Input:
-    def mutate(self, inputs: List[Input], taints: List[InputTaint], index_of_input: int) -> int: #idk about this return
+    def mutate(self, inputs: List[Input], taints: List[InputTaint], index_of_input: int, tainted_idx_list: List[int]) -> int: #idk about this return
         """
         Mutate operator just modifies tainted inputs `slightly`
         intuition modification of tainted inputs 
         will result in a seed that could cause more coverage
         """
         #note that these params are not used / implemented, but are here for future use
-        idx = self.get_idxs_with_taint(inputs, taints, index_of_input)
 
-        random_idx = self.get_random_idx(idx)
+        random_idx = self.get_random_idx(tainted_idx_list)
 
         #mutate the input
-        input = inputs[index_of_input]
+        input_ = inputs[index_of_input]
 
-        tainted_input = input[random_idx] # this is uint64
+        tainted_input = input_[random_idx] # this is uint64
 
-        #deal with overflow
+        index = random.randint(0, 63)
 
-        #(this could be very wrong?)
-        if (tainted_input) == UINT_MAX:
-            tainted_input -= 1 #decrement
-        elif (tainted_input) == UINT_MIN:
-            tainted_input += 1
-        else:
-            #randomly increment or decrement
-            if random.randint(0, 1) == 0:
-                tainted_input += 1
-            else:
-                tainted_input -= 1
+        #flip the bit
+        tainted_input = tainted_input ^ (1 << index)
 
+        #return the mutated input
         return tainted_input
 
-    # perhaps return the mutated input so that can be added to non mutated inputs
 
 
     def mutate_improved(self, inputs: List[Input], taints: List[InputTaint], index_of_input: int, tainted_idx_list: List[int]) -> Input:
@@ -196,7 +188,7 @@ class InputGeneratorCommon(InputGenerator):
             random_idx_2 = self.get_random_idx(idx_list)
 
         #make sure not the same index
-        for count in range(7):
+        for count in range(5):
             if random_idx_1 == random_idx_2:
                 random_idx_2 = self.get_random_idx(idx_list)
             else:
@@ -311,7 +303,7 @@ class NumpyRandomInputGenerator(InputGeneratorCommon):
         return input_
 
     
-    def mutate_improved(self, inputs: List[Input], taints: List[InputTaint], index_of_input: int, tainted_idx_list: List[int]) -> Input:
+        def mutate_improved(self, inputs: List[Input], taints: List[InputTaint], index_of_input: int, tainted_idx_list: List[int]) -> Input:
         """
         Mutate operator just modifies tainted inputs `slightly`
         intuition modification of tainted inputs 
@@ -346,7 +338,7 @@ class NumpyRandomInputGenerator(InputGeneratorCommon):
             random_idx_2 = self.get_random_idx(idx_list)
 
         #make sure not the same index
-        for count in range(7):
+        for count in range(5):
             if random_idx_1 == random_idx_2:
                 random_idx_2 = self.get_random_idx(idx_list)
             else:
@@ -354,16 +346,14 @@ class NumpyRandomInputGenerator(InputGeneratorCommon):
 
 
         #get the input from array
-        input = inputs[index_of_input] 
+        input_ = inputs[index_of_input] 
         
         #get the two tainted inputs
-        tainted_input_1 = input[random_idx_1] # this is uint64
-        tainted_input_2 = input[random_idx_2] # this is uint64 so now r u like actually gonna do something with this?
+        tainted_input_1 = input_[random_idx_1] # this is uint64
+        tainted_input_2 = input_[random_idx_2] # this is uint64 so now r u like actually gonna do something with this?
 
         #use that intution from observations that similar activated bits trigger similar bugs
         mutated_input = tainted_input_1 | tainted_input_2
-
-        #at some point this will all be 1's tho, so need to like randomly choose btw a couple
 
         return mutated_input
 
@@ -421,5 +411,29 @@ class NumpyRandomInputGenerator(InputGeneratorCommon):
         
 
         return mutated_input
+
+
+    def mutate(self, inputs: List[Input], taints: List[InputTaint], index_of_input: int, tainted_idx_list: List[int]) -> int: #idk about this return
+        """
+        Mutate operator just modifies tainted inputs `slightly`
+        intuition modification of tainted inputs 
+        will result in a seed that could cause more coverage
+        """
+        #note that these params are not used / implemented, but are here for future use
+
+        random_idx = self.get_random_idx(tainted_idx_list)
+
+        #mutate the input
+        input_ = inputs[index_of_input]
+
+        tainted_input = input_[random_idx] # this is uint64
+
+        index = random.randint(0, 63)
+
+        #flip the bit
+        tainted_input = tainted_input ^ (1 << index)
+
+        #return the mutated input
+        return tainted_input
 
 
