@@ -70,7 +70,7 @@ class InputGeneratorCommon(InputGenerator):
                     #t_inputs = self.get_idxs_with_taint(inputs, taints, i)
                     #if (len(t_inputs) >= 2): 
                             #mutated_input = self.mutate_improved(inputs, taints, i, t_inputs)
-                elif random.randint(0, 1) == 0:
+                elif random.randint(0, 2) == 0:
                     mutated_input = self.mutate_dumb(inputs, i)
                     new_input[j] = mutated_input #i think
 
@@ -225,7 +225,11 @@ class InputGeneratorCommon(InputGenerator):
         input_ = inputs[index_of_input] 
 
         random_idx_1 = random.randint(0,(len(input_) - 1))
+
+        print(random_idx_1)
+
         random_idx_2 = random.randint(0,(len(input_) - 1))
+        print(random_idx_2)
         
         #get the two tainted inputs
         #64 bit ints randomly selected, not based on taint
@@ -236,11 +240,12 @@ class InputGeneratorCommon(InputGenerator):
         
         #mutated_input = tainted_input_1 | tainted_input_2
 
-        
+        '''
         if random.randint(0,1) == 0:
             mutated_input = tainted_input_1 | tainted_input_2
         else:
             mutated_input = tainted_input_1 & tainted_input_2
+        '''
         
 
         return mutated_input
