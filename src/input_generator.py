@@ -134,21 +134,20 @@ class InputGeneratorCommon(InputGenerator):
         intuition modification of tainted inputs 
         will result in a seed that could cause more coverage
         """
-        #note that these params are not used / implemented, but are here for future use
+            random_idx = self.get_random_idx(tainted_idx_list)
 
-        random_idx = self.get_random_idx(tainted_idx_list)
-
-        #mutate the input
         input_ = inputs[index_of_input]
 
-        tainted_input = input_[random_idx] # this is uint64
+        tainted_input = input_[random_idx]
 
-        index_to_flip = random.randint(0, 63)
+        input_length = len(tainted_input)
 
-        #flip the bit
-        mutated_input_ = tainted_input | (1 << index_to_flip)
+        index_to_flip = np.random.randint(0, input_length)
 
-        #return the mutated input
+        mask = np.uint64(1) << index_to_flip
+
+        mutated_input_ = tainted_input | mask
+
         return mutated_input_
 
 
@@ -419,20 +418,18 @@ class NumpyRandomInputGenerator(InputGeneratorCommon):
         intuition modification of tainted inputs 
         will result in a seed that could cause more coverage
         """
-        #note that these params are not used / implemented, but are here for future use
-
         random_idx = self.get_random_idx(tainted_idx_list)
 
-        #mutate the input
         input_ = inputs[index_of_input]
 
-        tainted_input = input_[random_idx] # this is uint64
+        tainted_input = input_[random_idx]
 
-        index_to_flip = random.randint(0, 63)
+        input_length = len(tainted_input)
 
-        #flip the bit
-        mutated_input_ = tainted_input | (1 << index_to_flip)
+        index_to_flip = np.random.randint(0, input_length)
 
-        #return the mutated input
+        mask = np.uint64(1) << index_to_flip
+
+        mutated_input_ = tainted_input | mask
+
         return mutated_input_
-
