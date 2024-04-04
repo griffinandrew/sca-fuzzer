@@ -540,7 +540,7 @@ class NumpyRandomInputGenerator(InputGeneratorCommon):
 
 
         rand_int = random.randint(0, 1)
-        if rand_int == 0:
+        elif rand_int == 0:
             mutated_input = tainted_input_1 - 1
         elif rand_int == 1:
             mutated_input = tainted_input_1 + 1
