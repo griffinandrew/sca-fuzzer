@@ -62,23 +62,23 @@ class InputGeneratorCommon(InputGenerator):
             new_input = self._generate_one() 
             t_inputs = self.get_idxs_with_taint(inputs, taints, i)
             for j in range(input_.data_size):
-                #if taint[j]:
-                #    new_input[j] = input_[j]
-                #else:
+                if taint[j]:
+                    new_input[j] = input_[j]
+                else:
                     #only do these mutations occasionally to cut on cost and have diversity of input
                     #perhaps this could be more sophisticated, but for now this is fine
                     #if random.randint(0, 1) == 0:
                     #t_inputs = self.get_idxs_with_taint(inputs, taints, i)
-                    #if (len(t_inputs) >= 2) and random.randint(0, 9) == 0: 
-                        #mutated_input = self.mutate_improved(inputs, taints, i, t_inputs)
+                    if (len(t_inputs) >= 1) and random.randint(0, 9) == 0: 
+                        mutated_input = self.mutate_taint_untaint(inputs, taints, i, t_inputs)
                     #mutated_input = self.mutate(inputs, taints, i, t_inputs)
-                    #new_input[j] = mutated_input
+                        new_input[j] = mutated_input
                 #elif random.randint(0, 3) == 0:
                 #    mutated_input = self.mutate_dumb(inputs, i)
                 #    new_input[j] = mutated_input
-                if random.randint(0, 1) == 0:
-                    mutated_input = self.mutate_dumb(inputs, i)
-                    new_input[j] = mutated_input
+                #if random.randint(0, 1) == 0:
+                #    mutated_input = self.mutate_dumb(inputs, i)
+                #    new_input[j] = mutated_input
 
             new_inputs.append(new_input)
 
@@ -152,6 +152,30 @@ class InputGeneratorCommon(InputGenerator):
         mutated_input_ = tainted_input | mask
 
         return mutated_input_
+
+    
+    def mutate_taint_untaint(self, inputs: List[Input], taints: List[InputTaint], index_of_input: int, tainted_idx_list: List[int]) -> Input:
+        """
+        Mutate operator just modifies tainted inputs `slightly`
+        intuition modification of tainted inputs 
+        will result in a seed that could cause more coverage
+        """
+
+        #get the input from array
+        input_ = inputs[index_of_input] 
+
+
+        random_idx_tainted = self.get_random_idx(tainted_idx_list)
+        random_idx_untainted = random.randint(0,(len(input_) - 1))
+        
+        #get the two tainted inputs
+        tainted_input_1 = input_[random_idx_tainted] # this is uint64
+        untainted_input_2 = input_[random_idx_untainted] # this is uint64 so now r u like actually gonna do something with this?
+
+        #use that intution from observations that similar activated bits trigger similar bugs
+        mutated_input = tainted_input_1 | untainted_input_2
+
+        return mutated_input
 
 
 
@@ -242,6 +266,31 @@ class InputGeneratorCommon(InputGenerator):
         '''
         
         
+
+        return mutated_input
+
+
+
+    def mutate_taint_untaint(self, inputs: List[Input], taints: List[InputTaint], index_of_input: int, tainted_idx_list: List[int]) -> Input:
+        """
+        Mutate operator just modifies tainted inputs `slightly`
+        intuition modification of tainted inputs 
+        will result in a seed that could cause more coverage
+        """
+
+        #get the input from array
+        input_ = inputs[index_of_input] 
+
+
+        random_idx_tainted = self.get_random_idx(tainted_idx_list)
+        random_idx_untainted = random.randint(0,(len(input_) - 1))
+        
+        #get the two tainted inputs
+        tainted_input_1 = input_[random_idx_tainted] # this is uint64
+        untainted_input_2 = input_[random_idx_untainted] # this is uint64 so now r u like actually gonna do something with this?
+
+        #use that intution from observations that similar activated bits trigger similar bugs
+        mutated_input = tainted_input_1 | untainted_input_2
 
         return mutated_input
 

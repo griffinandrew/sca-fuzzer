@@ -2,7 +2,7 @@
 
 COMMAND="rvzr fuzz -s base.json -n 300 -i 25 -c config.yaml -w ./violations"
 
-FILE="50%_no_taint.txt"
+FILE="10%_taint_untaint.txt"
 
 for ((i=1; i<=15; i++)); do
     echo "************************"
