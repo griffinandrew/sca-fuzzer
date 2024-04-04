@@ -166,7 +166,7 @@ class InputGeneratorCommon(InputGenerator):
 
 
         random_idx_tainted = self.get_random_idx(tainted_idx_list)
-        random_idx_untainted = random.randint(0,(len(input_.data_size) - 1))
+        random_idx_untainted = random.randint(0,(input_.data_size))
         
         #get the two tainted inputs
         tainted_input_1 = input_[random_idx_tainted] # this is uint64
