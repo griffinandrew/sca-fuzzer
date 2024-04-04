@@ -162,11 +162,11 @@ class InputGeneratorCommon(InputGenerator):
         """
 
         #get the input from array
-        input_ = inputs[index_of_input] 
+        input_ = inputs[index_of_input]   #input_.data_size
 
 
         random_idx_tainted = self.get_random_idx(tainted_idx_list)
-        random_idx_untainted = random.randint(0,(len(input_) - 1))
+        random_idx_untainted = random.randint(0,(len(input_.data_size) - 1))
         
         #get the two tainted inputs
         tainted_input_1 = input_[random_idx_tainted] # this is uint64
