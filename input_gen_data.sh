@@ -2,9 +2,9 @@
 
 COMMAND="rvzr fuzz -s base.json -n 300 -i 25 -c config.yaml -w ./violations"
 
-FILE="10%_taint_untaint.txt"
+FILE="25%_taint_untaint.txt"
 
-for ((i=1; i<=15; i++)); do
+for ((i=1; i<=30; i++)); do
     echo "************************"
     echo "running iter $i..."
     echo "************************" >> "$FILE"
