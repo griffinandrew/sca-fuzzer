@@ -291,6 +291,42 @@ class InputGeneratorCommon(InputGenerator):
         #use that intution from observations that similar activated bits trigger similar bugs
         mutated_input = tainted_input_1 | untainted_input_2
 
+        return mutated_input_
+
+
+
+
+    def mutate_taint_smart(self, inputs: List[Input], taints: List[InputTaint], index_of_input: int, tainted_idx_list: List[int]) -> Input:
+        """
+        Mutate operator just modifies tainted inputs `slightly`
+        intuition modification of tainted inputs 
+        will result in a seed that could cause more coverage
+        """
+
+        #get the input from array
+        input_ = inputs[index_of_input]   #input_.data_size
+
+        random_idx_tainted = self.get_random_idx(tainted_idx_list)
+        
+        #get the two tainted inputs
+        tainted_input_1 = input_[random_idx_tainted] # this is uint64
+
+        #if logic here 
+
+        if tainted_input_1 == UINT_MAX:
+            #if the input is 0, then we can just set it to 1
+            mutated_input = tainted_input_1 - 1
+        if tainted_input_1 == UINT_MIN:
+            #if the input is 0, then we can just set it to 1
+            mutated_input = tainted_input_1 + 1
+
+
+        rand_int = random.randint(0, 1)
+        elif rand_int == 0:
+            mutated_input = tainted_input_1 - 1
+        elif rand_int == 1:
+            mutated_input = tainted_input_1 + 1
+
         return mutated_input
 
 
@@ -463,6 +499,44 @@ class NumpyRandomInputGenerator(InputGeneratorCommon):
         return mutated_input
 
 
+
+
+
+
+    def mutate_taint_smart(self, inputs: List[Input], taints: List[InputTaint], index_of_input: int, tainted_idx_list: List[int]) -> Input:
+        """
+        Mutate operator just modifies tainted inputs `slightly`
+        intuition modification of tainted inputs 
+        will result in a seed that could cause more coverage
+        """
+
+        #get the input from array
+        input_ = inputs[index_of_input]   #input_.data_size
+
+        random_idx_tainted = self.get_random_idx(tainted_idx_list)
+        
+        #get the two tainted inputs
+        tainted_input_1 = input_[random_idx_tainted] # this is uint64
+
+        #if logic here 
+
+        if tainted_input_1 == UINT_MAX:
+            #if the input is 0, then we can just set it to 1
+            mutated_input = tainted_input_1 - 1
+        if tainted_input_1 == UINT_MIN:
+            #if the input is 0, then we can just set it to 1
+            mutated_input = tainted_input_1 + 1
+
+
+        rand_int = random.randint(0, 1)
+        elif rand_int == 0:
+            mutated_input = tainted_input_1 - 1
+        elif rand_int == 1:
+            mutated_input = tainted_input_1 + 1
+
+        return mutated_input
+
+
     def mutate(self, inputs: List[Input], taints: List[InputTaint], index_of_input: int, tainted_idx_list: List[int]) -> int: #idk about this return
         """
         Mutate operator just modifies tainted inputs `slightly`
@@ -546,3 +620,7 @@ class NumpyRandomInputGenerator(InputGeneratorCommon):
             mutated_input = tainted_input_1 + 1
 
         return mutated_input
+
+
+
+
