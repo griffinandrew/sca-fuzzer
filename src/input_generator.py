@@ -310,7 +310,7 @@ class InputGeneratorCommon(InputGenerator):
 
         #if logic here 
 
-        if tainted_input_1 == UINT_MAX || tainted_input_1 == UINT_MIN:
+        if tainted_input_1 == UINT_MAX or tainted_input_1 == UINT_MIN:
 
             if tainted_input_1 == UINT_MAX:
                 mutated_input = tainted_input_1 - 1
@@ -498,8 +498,6 @@ class NumpyRandomInputGenerator(InputGeneratorCommon):
 
 
 
-
-
 def mutate_taint_smart(self, inputs: List[Input], taints: List[InputTaint], index_of_input: int, tainted_idx_list: List[int]) -> Input:
         """
         Mutate operator just modifies tainted inputs `slightly`
@@ -517,7 +515,7 @@ def mutate_taint_smart(self, inputs: List[Input], taints: List[InputTaint], inde
 
         #if logic here 
 
-        if tainted_input_1 == UINT_MAX || tainted_input_1 == UINT_MIN:
+        if tainted_input_1 == UINT_MAX or tainted_input_1 == UINT_MIN:
 
             if tainted_input_1 == UINT_MAX:
                 mutated_input = tainted_input_1 - 1
