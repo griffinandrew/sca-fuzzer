@@ -70,7 +70,7 @@ class InputGeneratorCommon(InputGenerator):
                     #if random.randint(0, 1) == 0:
                     #t_inputs = self.get_idxs_with_taint(inputs, taints, i)
                     if (len(t_inputs) >= 1) and random.randint(0, 3) == 0: 
-                        mutated_input = self.mutate_taint_untaint(inputs, taints, i, t_inputs)
+                        mutated_input = self.mutate_taint_untaint(inputs, taints, i, t_inputs, j)
                     #mutated_input = self.mutate(inputs, taints, i, t_inputs)
                         new_input[j] = mutated_input
                 #elif random.randint(0, 3) == 0:
@@ -154,7 +154,7 @@ class InputGeneratorCommon(InputGenerator):
         return mutated_input_
 
     
-    def mutate_taint_untaint(self, inputs: List[Input], taints: List[InputTaint], index_of_input: int, tainted_idx_list: List[int]) -> Input:
+    def mutate_taint_untaint(self, inputs: List[Input], taints: List[InputTaint], index_of_input: int, tainted_idx_list: List[int], idx_of_input_val: int) -> Input:
         """
         Mutate operator just modifies tainted inputs `slightly`
         intuition modification of tainted inputs 
@@ -166,7 +166,7 @@ class InputGeneratorCommon(InputGenerator):
 
 
         random_idx_tainted = self.get_random_idx(tainted_idx_list)
-        random_idx_untainted = random.randint(0,(input_.data_size))
+        random_idx_untainted = idx_of_input_val
         
         #get the two tainted inputs
         tainted_input_1 = input_[random_idx_tainted] # this is uint64
@@ -264,13 +264,11 @@ class InputGeneratorCommon(InputGenerator):
         else:
             mutated_input = tainted_input_1 & tainted_input_2
         '''
-        
-        
-
+    
         return mutated_input
 
 
-    def mutate_taint_untaint(self, inputs: List[Input], taints: List[InputTaint], index_of_input: int, tainted_idx_list: List[int]) -> Input:
+    def mutate_taint_untaint(self, inputs: List[Input], taints: List[InputTaint], index_of_input: int, tainted_idx_list: List[int], idx_of_input_val: int) -> Input:
         """
         Mutate operator just modifies tainted inputs `slightly`
         intuition modification of tainted inputs 
@@ -282,7 +280,7 @@ class InputGeneratorCommon(InputGenerator):
 
 
         random_idx_tainted = self.get_random_idx(tainted_idx_list)
-        random_idx_untainted = random.randint(0,(len(input_.data_size) - 1))
+        random_idx_untainted = idx_of_input_val
         
         #get the two tainted inputs
         tainted_input_1 = input_[random_idx_tainted] # this is uint64
@@ -291,8 +289,7 @@ class InputGeneratorCommon(InputGenerator):
         #use that intution from observations that similar activated bits trigger similar bugs
         mutated_input = tainted_input_1 | untainted_input_2
 
-        return mutated_input_
-
+        return mutated_input
 
 
 
@@ -560,7 +557,7 @@ class NumpyRandomInputGenerator(InputGeneratorCommon):
         return mutated_input_
 
 
-    def mutate_taint_untaint(self, inputs: List[Input], taints: List[InputTaint], index_of_input: int, tainted_idx_list: List[int]) -> Input:
+    def mutate_taint_untaint(self, inputs: List[Input], taints: List[InputTaint], index_of_input: int, tainted_idx_list: List[int], idx_of_input_val: int) -> Input:
         """
         Mutate operator just modifies tainted inputs `slightly`
         intuition modification of tainted inputs 
@@ -572,7 +569,7 @@ class NumpyRandomInputGenerator(InputGeneratorCommon):
 
 
         random_idx_tainted = self.get_random_idx(tainted_idx_list)
-        random_idx_untainted = random.randint(0,(len(input_.data_size) - 1))
+        random_idx_untainted = idx_of_input_val
         
         #get the two tainted inputs
         tainted_input_1 = input_[random_idx_tainted] # this is uint64
@@ -586,7 +583,7 @@ class NumpyRandomInputGenerator(InputGeneratorCommon):
 
 
 
-
+'''
 
     def mutate_taint_smart(self, inputs: List[Input], taints: List[InputTaint], index_of_input: int, tainted_idx_list: List[int]) -> Input:
         """
@@ -621,6 +618,6 @@ class NumpyRandomInputGenerator(InputGeneratorCommon):
 
         return mutated_input
 
-
+'''
 
 
