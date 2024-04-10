@@ -70,7 +70,8 @@ class InputGeneratorCommon(InputGenerator):
                     #if random.randint(0, 1) == 0:
                     #t_inputs = self.get_idxs_with_taint(inputs, taints, i)
                     if (len(t_inputs) >= 1) and random.randint(0, 3) == 0: 
-                        mutated_input = self.mutate_taint_untaint(inputs, taints, i, t_inputs, j)
+                        #mutated_input = self.mutate_taint_smart(inputs, taints, i, t_inputs, j)
+                        mutated_input = self.mutate_taint_smart(inputs, taints, i, t_inputs)
                     #mutated_input = self.mutate(inputs, taints, i, t_inputs)
                         new_input[j] = mutated_input
                 #elif random.randint(0, 3) == 0:
