@@ -310,18 +310,18 @@ class InputGeneratorCommon(InputGenerator):
 
         #if logic here 
 
-        if tainted_input_1 == UINT_MAX:
-            #if the input is 0, then we can just set it to 1
-            mutated_input = tainted_input_1 - 1
-        if tainted_input_1 == UINT_MIN:
-            #if the input is 0, then we can just set it to 1
-            mutated_input = tainted_input_1 + 1
+        if tainted_input_1 == UINT_MAX || tainted_input_1 == UINT_MIN:
 
+            if tainted_input_1 == UINT_MAX:
+                mutated_input = tainted_input_1 - 1
+            else:
+                mutated_input = tainted_input_1 + 1
 
-        rand_int = random.randint(0, 1)
-        elif rand_int == 0:
+        else:
+            rand_int = random.randint(0, 1)
+        if rand_int == 0:
             mutated_input = tainted_input_1 - 1
-        elif rand_int == 1:
+        if rand_int == 1:
             mutated_input = tainted_input_1 + 1
 
         return mutated_input
@@ -500,7 +500,7 @@ class NumpyRandomInputGenerator(InputGeneratorCommon):
 
 
 
-    def mutate_taint_smart(self, inputs: List[Input], taints: List[InputTaint], index_of_input: int, tainted_idx_list: List[int]) -> Input:
+def mutate_taint_smart(self, inputs: List[Input], taints: List[InputTaint], index_of_input: int, tainted_idx_list: List[int]) -> Input:
         """
         Mutate operator just modifies tainted inputs `slightly`
         intuition modification of tainted inputs 
@@ -517,18 +517,18 @@ class NumpyRandomInputGenerator(InputGeneratorCommon):
 
         #if logic here 
 
-        if tainted_input_1 == UINT_MAX:
-            #if the input is 0, then we can just set it to 1
-            mutated_input = tainted_input_1 - 1
-        if tainted_input_1 == UINT_MIN:
-            #if the input is 0, then we can just set it to 1
-            mutated_input = tainted_input_1 + 1
+        if tainted_input_1 == UINT_MAX || tainted_input_1 == UINT_MIN:
 
+            if tainted_input_1 == UINT_MAX:
+                mutated_input = tainted_input_1 - 1
+            else:
+                mutated_input = tainted_input_1 + 1
 
-        rand_int = random.randint(0, 1)
-        elif rand_int == 0:
+        else:
+            rand_int = random.randint(0, 1)
+        if rand_int == 0:
             mutated_input = tainted_input_1 - 1
-        elif rand_int == 1:
+        if rand_int == 1:
             mutated_input = tainted_input_1 + 1
 
         return mutated_input
